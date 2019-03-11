@@ -21,6 +21,10 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     public void onCrimeSelected(Crime crime) {
+        //使用Fragment 实现双版面布局，横竖屏屏幕设配
+        //TODO 别名资源  refs.xml
+        //TODO 通过refs.xml文件来映射到不同的布局文件，横屏与竖屏显示不同的效果，
+        //TODO 回调事件中通过判断是否存在某个viewID来区分 以响应不同的事件
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = CrimePagerActivity.newIntent(this, crime.getId());
             startActivity(intent);
