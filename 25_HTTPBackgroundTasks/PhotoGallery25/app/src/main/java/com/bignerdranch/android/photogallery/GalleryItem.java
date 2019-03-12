@@ -1,11 +1,9 @@
-package com.by5388.photogallery;
-
-import com.by5388.photogallery.use.loader.ShowItem;
+package com.bignerdranch.android.photogallery;
 
 /**
  * @author Administrator
  */
-public class GalleryItem implements ShowItem {
+public class GalleryItem {
     private String mCaption;
     private String mId;
     private String mUrl;
@@ -36,11 +34,6 @@ public class GalleryItem implements ShowItem {
 
     @Override
     public String toString() {
-        return mCaption;
-    }
-
-    @Override
-    public String getSHowText() {
         return mCaption;
     }
 }

@@ -23,7 +23,9 @@ class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {
     @Override
     protected void onPostExecute(List<GalleryItem> galleryItems) {
         CallBack callBack = mCallBack.get();
-        callBack.updateData(galleryItems);
+        if (callBack != null) {
+            callBack.updateData(galleryItems);
+        }
     }
 
     @SuppressWarnings("all")

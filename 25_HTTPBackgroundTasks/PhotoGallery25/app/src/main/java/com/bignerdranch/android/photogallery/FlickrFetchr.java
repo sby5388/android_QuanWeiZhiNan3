@@ -1,4 +1,4 @@
-package com.by5388.photogallery;
+package com.bignerdranch.android.photogallery;
 
 import android.net.Uri;
 import android.util.Log;
@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,17 +21,14 @@ import java.util.List;
 public class FlickrFetchr {
 
     private static final String TAG = "FlickrFetchr";
-    /**
-     * TODO 替换相应的key
-     * https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=d80e0fbab7551485a80a02a521f228eb&format=json&nojsoncallback=1
-     */
-    public static final String API_KEY = "d80e0fbab7551485a80a02a521f228eb";
 
+    //TODO
+//    private static final String API_KEY = "REPLACE_ME_WITH_A_REAL_KEY";
+    private static final String API_KEY = "d80e0fbab7551485a80a02a521f228eb";
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
-        System.out.println("getUrlBytes");
         URL url = new URL(urlSpec);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
@@ -46,27 +42,21 @@ public class FlickrFetchr {
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
             }
-            //TODO 如何把流转换成文件:断点下载，多线程下载
-            //需要相应的测试类来验证
-            RandomAccessFile randomAccessFile;
             out.close();
             return out.toByteArray();
         } finally {
             connection.disconnect();
         }
     }
-
     public String getUrlString(String urlSpec) throws IOException {
-        System.out.println("getUrlString");
         return new String(getUrlBytes(urlSpec));
     }
 
     public List<GalleryItem> fetchItems() {
-        System.out.println("fetchItems");
+
         List<GalleryItem> items = new ArrayList<>();
 
         try {
-            //TODO 可以使用retrofit的注解来替换
             String url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
                     .appendQueryParameter("method", "flickr.photos.getRecent")
@@ -100,11 +90,11 @@ public class FlickrFetchr {
             GalleryItem item = new GalleryItem();
             item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
-
+            
             if (!photoJsonObject.has("url_s")) {
                 continue;
             }
-
+            
             item.setUrl(photoJsonObject.getString("url_s"));
             items.add(item);
         }
