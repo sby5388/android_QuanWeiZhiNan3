@@ -1,4 +1,4 @@
-package com.by5388.photogallery;
+package com.by5388.photogallery.show;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

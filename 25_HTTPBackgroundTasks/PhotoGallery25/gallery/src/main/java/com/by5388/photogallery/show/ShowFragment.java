@@ -1,4 +1,4 @@
-package com.by5388.photogallery;
+package com.by5388.photogallery.show;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.by5388.photogallery.FlickrFetchr;
+import com.by5388.photogallery.R;
 import com.by5388.photogallery.rx.api.NetTools;
 import com.by5388.photogallery.rx.api.QueryService;
 import com.by5388.photogallery.rx.bean.Result;
@@ -19,7 +21,6 @@ import com.by5388.photogallery.use.loader.ShowItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

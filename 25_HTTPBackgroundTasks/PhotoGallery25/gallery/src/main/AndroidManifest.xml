@@ -13,14 +13,18 @@
         <activity android:name="PhotoGalleryActivity">
 
         </activity>
-        <activity android:name=".MainActivity" >
+        <activity android:name=".show.MainActivity">
+
+
+        </activity>
+        <activity android:name=".zhuang.bi.ZhuangbiActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
 
         </activity>
     </application>

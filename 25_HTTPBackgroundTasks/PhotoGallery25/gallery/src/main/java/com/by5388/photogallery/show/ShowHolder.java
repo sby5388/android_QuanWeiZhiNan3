@@ -1,4 +1,4 @@
-package com.by5388.photogallery;
+package com.by5388.photogallery.show;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

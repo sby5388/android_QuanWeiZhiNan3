@@ -1,6 +1,8 @@
-package com.by5388.photogallery;
+package com.by5388.photogallery.show;
 
 import android.support.v4.app.Fragment;
+
+import com.by5388.photogallery.SingleFragmentActivity;
 
 /**
  * @author Administrator
