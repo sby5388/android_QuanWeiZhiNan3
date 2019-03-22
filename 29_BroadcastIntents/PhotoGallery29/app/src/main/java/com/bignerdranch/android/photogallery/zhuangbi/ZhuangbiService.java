@@ -30,6 +30,7 @@ public class ZhuangbiService extends IntentService {
 
 
     public static Intent newIntent(Context context) {
+        Log.d(TAG, "setServiceAlarm: 我又启动服务了");
         return new Intent(context, ZhuangbiService.class);
     }
 
@@ -46,7 +47,7 @@ public class ZhuangbiService extends IntentService {
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {
-        Log.d(TAG, "setServiceAlarm: 我又启动服务了");
+
         Intent intent = newIntent(context);
         PendingIntent pi = PendingIntent.getService(
                 context, 0, intent, 0);
