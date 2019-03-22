@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bignerdranch.android.photogallery">
+
+    <permission
+        android:name="com.bignerdranch.android.photogallery.PRIVATE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.bignerdranch.android.photogallery.PRIVATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".PhotoGalleryActivity"></activity>
+        <activity android:name=".zhuangbi.ZhuangbiActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".zhuangbi.ZhuangbiService" />
+
+        <!--todo 让Activity自适应外界的变化：无需销毁重建activity，就能直接调整自己的视图以适应新的屏幕尺寸 -->
+        <activity
+            android:name=".PhotoPageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <!--TODO android:configChanges属性表明，如果因键盘开或关、屏幕方向改变、屏幕大小改变（也-->
+        <!--TODO 包括Android 3.2之后的屏幕方向变化）而发生设备配置更改，那么activity应自己处理配置更改。-->
+        <service android:name=".PollService" />
+
+        <!--TODO 接收开机广播-->
+        <receiver android:name=".StartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".NotificationReceiver"
+            android:exported="false">
+            <intent-filter android:priority="-999">
+                <action android:name="com.bignerdranch.android.photogallery.SHOW_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
