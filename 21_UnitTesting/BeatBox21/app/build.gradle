@@ -31,6 +31,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     testImplementation 'org.mockito:mockito-core:2.25.0'
-//    todo 删掉下面一行 整合测试才能进行，是引用了不同版本的包引起冲突
-//    androidTestImplementation 'org.hamcrest:hamcrest-junit:2.0.0.0'
+    //    todo 删掉下面一行 整合测试才能进行，是引用了不同版本的包引起冲突
+    //    androidTestImplementation 'org.hamcrest:hamcrest-junit:2.0.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

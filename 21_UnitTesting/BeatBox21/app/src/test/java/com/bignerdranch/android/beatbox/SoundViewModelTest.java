@@ -16,6 +16,7 @@ public class SoundViewModelTest {
 
     @Before
     public void setUp() throws Exception {
+        //创建虚拟的BeatBox对象
         mBeatBox = mock(BeatBox.class);
         mSound = new Sound("assetPath");
         mSubject = new SoundViewModel(mBeatBox);
@@ -30,6 +31,8 @@ public class SoundViewModelTest {
     @Test
     public void callsBeatBoxPlayOnButtonClicked() {
         mSubject.onButtonClicked();
+        // TODO: 2019/6/14 检测 mBeatBox 是否调用了play(Sound)的方法
+        //Mockito虚拟对象都能自我跟踪管理哪些方法调用了，以及都传入了哪些参数。
         verify(mBeatBox).play(mSound);
     }
 }

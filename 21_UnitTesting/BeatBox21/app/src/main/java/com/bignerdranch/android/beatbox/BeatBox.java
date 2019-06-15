@@ -6,8 +6,11 @@ import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.Log;
+import android.widget.SeekBar;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +57,7 @@ public class BeatBox {
 
         for (String filename : soundNames) {
             try {
-                String assetPath = SOUNDS_FOLDER + "/" + filename;
+                String assetPath = SOUNDS_FOLDER + File.separator + filename;
                 Sound sound = new Sound(assetPath);
                 load(sound);
                 mSounds.add(sound);
@@ -68,9 +71,12 @@ public class BeatBox {
         AssetFileDescriptor assetFd = mAssets.openFd(sound.getAssetPath());
         int soundId = mSoundPool.load(assetFd, 1);
         sound.setSoundId(soundId);
+        // TODO: 2019/6/14 没有关闭时 要警告了
+        assetFd.close();
     }
 
     public List<Sound> getSounds() {
         return mSounds;
     }
+
 }

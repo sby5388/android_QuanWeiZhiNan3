@@ -41,13 +41,13 @@ public class BeatBoxActivityTest {
         // TODO: 2019/3/11  这里整合测试出现了问题 "Error: Program type already present: org.hamcrest.Matchers"
         // TODO: 2019/3/12 测试发现是  module.build.gradle 引用了重复的包
         System.out.println(0);
-        Matcher<View> viewMatcher = withText("65_cjipie");
+        final Matcher<View> viewMatcher = withText("65_cjipie");
         System.out.println(1);
-        ViewInteraction viewInteraction = onView(viewMatcher);
+        final ViewInteraction viewInteraction = onView(viewMatcher);
         System.out.println(2);
-        ViewAssertion matches = matches(anything());
+        final ViewAssertion matches = matches(anything());
         System.out.println(3);
-        viewInteraction.check(matches);
+        final ViewInteraction check = viewInteraction.check(matches);
         System.out.println(4);
     }
 }
