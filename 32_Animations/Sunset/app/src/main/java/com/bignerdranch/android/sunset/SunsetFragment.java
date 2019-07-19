@@ -5,6 +5,9 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +19,7 @@ import android.view.animation.AccelerateInterpolator;
  * @author Administrator
  */
 public class SunsetFragment extends Fragment {
-    public static final String TAG = "SunsetFragment";
+    private static final String TAG = "SunsetFragment";
 
     private View mSceneView;
     private View mSunView;
@@ -30,56 +33,48 @@ public class SunsetFragment extends Fragment {
 
 
     private boolean mRise = false;
+    private Handler mHandler;
 
     public static SunsetFragment newInstance() {
         return new SunsetFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHandler = new Handler();
+        Resources resources = getResources();
+        mBlueSkyColor = resources.getColor(R.color.blue_sky);
+        mSunsetSkyColor = resources.getColor(R.color.sunset_sky);
+        mNightSkyColor = resources.getColor(R.color.night_sky);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sunset, container, false);
+        return inflater.inflate(R.layout.fragment_sunset, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         mSceneView = view;
         mSunView = view.findViewById(R.id.sun);
         mSkyView = view.findViewById(R.id.sky);
 
 
-        Resources resources = getResources();
-        mBlueSkyColor = resources.getColor(R.color.blue_sky);
-        mSunsetSkyColor = resources.getColor(R.color.sunset_sky);
-        mNightSkyColor = resources.getColor(R.color.night_sky);
-
-        mSceneView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSceneView.setEnabled(false);
-                if (mRise) {
-                    startAnimationRise();
-                } else {
-                    startAnimation();
-                }
-                mRise = !mRise;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(3000);
-                        } catch (Exception e) {
-
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mSceneView.setEnabled(true);
-                            }
-                        });
-                    }
-                }).start();
+        mSceneView.setOnClickListener(v -> {
+            mSceneView.setEnabled(false);
+            if (mRise) {
+                startUpAnimator();
+            } else {
+                startDownAnimator();
             }
+            mRise = !mRise;
+            mHandler.postDelayed(() -> mSceneView.setEnabled(true), 4500);
         });
 
-        return view;
     }
 
     /**
@@ -87,11 +82,11 @@ public class SunsetFragment extends Fragment {
      * Animator:
      * Animation:
      */
-    private void startAnimationRise() {
+    private void startUpAnimator() {
         //垂直方向：上升
         float sunYStart = mSkyView.getHeight();
         float sunYEnd = mSunViewTop;
-        Log.d(TAG, "startAnimationRise: mSunViewTop = " + mSunViewTop);
+        Log.d(TAG, "startUpAnimator: mSunViewTop = " + mSunViewTop);
         ObjectAnimator heightAnimator = ObjectAnimator
                 .ofFloat(mSunView, "y", sunYStart, sunYEnd)
                 .setDuration(3000);
@@ -120,12 +115,12 @@ public class SunsetFragment extends Fragment {
 
     }
 
-    private void startAnimation() {
+    private void startDownAnimator() {
         float sunYStart = mSunView.getTop();
         float sunYEnd = mSkyView.getHeight();
 
         mSunViewTop = mSunView.getTop();
-        Log.d(TAG, "startAnimation:  mSunView.getTop() = " + sunYStart);
+        Log.d(TAG, "startDownAnimator:  mSunView.getTop() = " + sunYStart);
 
         ObjectAnimator heightAnimator = ObjectAnimator
                 .ofFloat(mSunView, "y", sunYStart, sunYEnd)

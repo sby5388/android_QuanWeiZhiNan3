@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="line">
+    <!--todo shape-->
+    <!--ring:菱形-->
+    <!--oval:圆形-->
+    <!--line:直线-->
+    <!--rectangle:矩形-->
+    <stroke
+        android:width="10dp"
+        android:color="@color/blue_sky" />
+    <solid android:color="@color/colorAccent" />
+    <!--指定大小-->
+    <size
+        android:width="200dp"
+        android:height="40dp" />
+    <padding
+        android:bottom="30dp"
+        android:top="10dp" />
+
+</shape>

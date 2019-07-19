@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Sunset</string>
+    <string name="app_name">sunset</string>
+    <string name="snow">下雪</string>
+    <string name="line">line</string>
+    <string name="sea_sunset">seaSunset</string>
+    <string name="circle_sun">太阳</string>
 </resources>
