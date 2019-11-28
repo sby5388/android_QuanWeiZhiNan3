@@ -2,9 +2,11 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,12 @@ import android.widget.TextView;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
+    private static final String TAG = CrimeListFragment.class.getSimpleName();
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private int mIndex = -1;
+    private boolean mFirst = true;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +51,22 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyDataSetChanged();
+            // TODO: 2019/11/28 不需要显式更换数据源，只需要调用更新即可
+            // FIXME: 2019/11/28 只更新其中的一项
+            if (mFirst) {
+                mAdapter.notifyDataSetChanged();
+                Log.d(TAG, "updateUI: all - 0");
+                mFirst = false;
+            } else {
+                if (mIndex == -1) {
+                    Log.d(TAG, "updateUI: all - 1");
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG, "updateUI: mIndex = " + mIndex);
+                    mAdapter.notifyItemChanged(mIndex);
+                }
+
+            }
         }
     }
 
@@ -53,6 +74,7 @@ public class CrimeListFragment extends Fragment {
             implements View.OnClickListener {
 
         private Crime mCrime;
+        private int mIndex;
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -67,8 +89,9 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
         }
 
-        public void bind(Crime crime) {
+        public void bind(Crime crime, int index) {
             mCrime = crime;
+            mIndex = index;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
@@ -76,6 +99,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
+            CrimeListFragment.this.mIndex = this.mIndex;
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
@@ -85,12 +109,13 @@ public class CrimeListFragment extends Fragment {
 
         private List<Crime> mCrimes;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
+        @NonNull
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             return new CrimeHolder(layoutInflater, parent);
         }
@@ -98,7 +123,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.bind(crime);
+            holder.bind(crime, position);
         }
 
         @Override
@@ -106,4 +131,6 @@ public class CrimeListFragment extends Fragment {
             return mCrimes.size();
         }
     }
+
+
 }

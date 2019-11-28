@@ -47,4 +47,11 @@ public class CrimeLab {
 
         return null;
     }
+
+    public Crime getCrime(int position) {
+        if (position >= 0 && position < mCrimes.size()) {
+            return mCrimes.get(position);
+        }
+        return null;
+    }
 }
