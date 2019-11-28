@@ -1,14 +1,15 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,26 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView.setAdapter(mAdapter);
     }
 
+
+    private class PoliceCrimeHolder extends CrimeHolder {
+        private Button mButtonCallPolice;
+
+        PoliceCrimeHolder(LayoutInflater inflater, ViewGroup parent, @LayoutRes int layoutID) {
+            super(inflater, parent, layoutID);
+            mButtonCallPolice = itemView.findViewById(R.id.button_call_police);
+            mButtonCallPolice.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == mButtonCallPolice.getId()) {
+                Toast.makeText(getContext(), "Call Police", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            super.onClick(view);
+        }
+    }
+
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
@@ -48,8 +69,8 @@ public class CrimeListFragment extends Fragment {
         private TextView mTitleTextView;
         private TextView mDateTextView;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, @LayoutRes int layoutID) {
+            super(inflater.inflate(layoutID, parent, false));
             itemView.setOnClickListener(this);
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_title);
@@ -71,6 +92,8 @@ public class CrimeListFragment extends Fragment {
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+        private static final int VIEW_TYPE_NORMAL = 0;
+        private static final int VIEW_TYPE_REQUIRES_POLICE = 1;
 
         private List<Crime> mCrimes;
 
@@ -78,11 +101,25 @@ public class CrimeListFragment extends Fragment {
             mCrimes = crimes;
         }
 
+
+        @Override
+        public int getItemViewType(int position) {
+            final Crime crime = mCrimes.get(position);
+            return crime.isRequiresPolice() ? VIEW_TYPE_REQUIRES_POLICE : VIEW_TYPE_NORMAL;
+        }
+
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new CrimeHolder(layoutInflater, parent);
+            if (viewType == VIEW_TYPE_NORMAL) {
+                return new CrimeHolder(layoutInflater, parent, R.layout.list_item_crime);
+            }
+            if (viewType == VIEW_TYPE_REQUIRES_POLICE) {
+                return new PoliceCrimeHolder(layoutInflater, parent, R.layout.list_item_crime_police);
+            }
+            // 2019/11/28 default
+            return new CrimeHolder(layoutInflater, parent, R.layout.list_item_crime);
         }
 
         @Override
