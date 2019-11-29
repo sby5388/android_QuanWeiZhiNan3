@@ -8,17 +8,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Button;
 
 import java.util.List;
 import java.util.UUID;
 
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.IndexChangeCallback {
+    public static final String TAG = "MyViewPager";
 
     private static final String EXTRA_CRIME_ID =
             "com.bignerdranch.android.criminalintent.crime_id";
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
+
+    private Button mButtonToFirst;
+    private Button mButtonToLast;
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
@@ -35,6 +41,11 @@ public class CrimePagerActivity extends AppCompatActivity {
                 .getSerializableExtra(EXTRA_CRIME_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.crime_view_pager);
+        mButtonToFirst = findViewById(R.id.button_jump_first);
+        mButtonToLast = findViewById(R.id.button_jump_last);
+
+        mButtonToFirst.setOnClickListener(v -> toFirst());
+        mButtonToLast.setOnClickListener(v -> toLast());
 
         mCrimes = CrimeLab.get(this).getCrimes();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -82,5 +93,39 @@ public class CrimePagerActivity extends AppCompatActivity {
         public int getCount() {
             return mCrimes.size();
         }
+    }
+
+    private void toLast() {
+        Log.d(TAG, "toLast: ");
+        mViewPager.setCurrentItem(getLastPosition());
+    }
+
+    private void toFirst() {
+        Log.d(TAG, "toFirst: ");
+        mViewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void onUpdatePosition(int position) {
+        Log.d(TAG, "onUpdatePosition: position = " + position);
+        if (position == 0) {
+            mButtonToFirst.setEnabled(false);
+            mButtonToLast.setEnabled(true);
+        } else if (isLabLast(position)) {
+            mButtonToFirst.setEnabled(true);
+            mButtonToLast.setEnabled(false);
+        } else {
+            mButtonToFirst.setEnabled(true);
+            mButtonToLast.setEnabled(true);
+        }
+
+    }
+
+    private boolean isLabLast(int position) {
+        return position == getLastPosition();
+    }
+
+    private int getLastPosition() {
+        return CrimeLab.get(this).getCrimes().size() - 1;
     }
 }

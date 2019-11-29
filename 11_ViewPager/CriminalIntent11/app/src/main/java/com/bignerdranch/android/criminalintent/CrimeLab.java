@@ -42,4 +42,14 @@ public class CrimeLab {
 
         return null;
     }
+
+    public int getIndex(Crime crime) {
+        if (crime == null) {
+            return -1;
+        }
+        if (mCrimes.contains(crime)) {
+            return mCrimes.indexOf(crime);
+        }
+        return -1;
+    }
 }

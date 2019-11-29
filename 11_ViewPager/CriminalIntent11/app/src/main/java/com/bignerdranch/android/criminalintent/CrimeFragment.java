@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -14,7 +15,7 @@ import android.widget.EditText;
 
 import java.util.UUID;
 
-import static android.widget.CompoundButton.*;
+import static android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class CrimeFragment extends Fragment {
 
@@ -24,6 +25,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckbox;
+    private IndexChangeCallback mCallback;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -35,10 +37,21 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof IndexChangeCallback) {
+            mCallback = (IndexChangeCallback) context;
+        } else {
+            throw new RuntimeException("Context must implements CrimeFragment#IndexChangeCallback");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        mCallback.onUpdatePosition(CrimeLab.get(getContext()).getIndex(mCrime));
     }
 
     @Override
@@ -73,12 +86,16 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, 
-                    boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
                 mCrime.setSolved(isChecked);
             }
         });
 
         return v;
+    }
+
+    public interface IndexChangeCallback {
+        void onUpdatePosition(int position);
     }
 }
