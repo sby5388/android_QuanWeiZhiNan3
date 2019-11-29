@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class DatePickerFragment extends DialogFragment {
 
@@ -37,9 +37,13 @@ public class DatePickerFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Date date = (Date) getArguments().getSerializable(ARG_DATE);
+        Date date0 = (Date) getArguments().getSerializable(ARG_DATE);
+        if (date0 == null) {
+            date0 = new Date();
+        }
+        final Date date = date0;
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -61,7 +65,10 @@ public class DatePickerFragment extends DialogFragment {
                                 int year = mDatePicker.getYear();
                                 int month = mDatePicker.getMonth();
                                 int day = mDatePicker.getDayOfMonth();
-                                Date date = new GregorianCalendar(year, month, day).getTime();
+                                calendar.set(Calendar.YEAR, year);
+                                calendar.set(Calendar.MONTH, month);
+                                calendar.set(Calendar.DAY_OF_MONTH, day);
+                                date.setTime(calendar.getTimeInMillis());
                                 sendResult(Activity.RESULT_OK, date);
                             }
                         })
@@ -69,14 +76,16 @@ public class DatePickerFragment extends DialogFragment {
     }
 
     private void sendResult(int resultCode, Date date) {
-        if (getTargetFragment() == null) {
+        final Fragment targetFragment = getTargetFragment();
+        if (targetFragment == null) {
             return;
         }
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_DATE, date);
 
-        getTargetFragment()
+        // TODO: 2019/11/29 返回结果
+        targetFragment
                 .onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 }
