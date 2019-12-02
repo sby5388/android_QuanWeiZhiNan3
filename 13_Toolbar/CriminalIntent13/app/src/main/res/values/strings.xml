@@ -9,6 +9,9 @@
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle_format">%1$d crimes</string>
+    <string name="delete_crime">DeleteCrime</string>
+    <string name="empty_tip">没有crime记录可以显示</string>
+    <string name="add_crime">Add Crime</string>
 
     <!--TODO 单词的复数-->
     <plurals name="apple">
@@ -16,5 +19,10 @@
         <item quantity="one">%1$d apple</item>
         <!--其他数量时-->
         <item quantity="other">%1$d apples</item>
+    </plurals>
+
+    <plurals name="subtitle_plurals">
+        <item quantity="one">%1$d crime</item>
+        <item quantity="other">%1$d crimes</item>
     </plurals>
 </resources>

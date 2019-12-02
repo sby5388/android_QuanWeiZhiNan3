@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,7 +59,7 @@ public class CrimeListFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
@@ -75,9 +77,9 @@ public class CrimeListFragment extends Fragment {
             subtitleItem.setTitle(R.string.show_subtitle);
         }
         MenuItem addMenuItem = menu.findItem(R.id.new_crime);
-        if (mChangeIcon){
+        if (mChangeIcon) {
             // TODO: 2019/2/21 这里可以更改菜单的icon
-//            addMenuItem.setIcon();
+            addMenuItem.setIcon(android.R.drawable.star_on);
         }
     }
 
@@ -85,14 +87,11 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_crime:
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity
-                        .newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+                addCrime();
                 return true;
             case R.id.show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
+                // TODO: 2019/11/29 主动更新Menu
                 getActivity().invalidateOptionsMenu();
                 updateSubtitle();
                 return true;
@@ -101,18 +100,29 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
+    private void addCrime() {
+        final Crime crime = new Crime();
+        CrimeLab.get(getActivity()).addCrime(crime);
+        Intent intent = CrimePagerActivity
+                .newIntent(getActivity(), crime.getId());
+        startActivity(intent);
+    }
+
     private void updateSubtitle() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount = crimeLab.getCrimes().size();
         String subtitle = getString(R.string.subtitle_format, crimeCount);
+        String quantityString = getResources().getQuantityString(R.plurals.subtitle_plurals, crimeCount, crimeCount);
 
         if (!mSubtitleVisible) {
             subtitle = null;
+            quantityString = null;
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         // TODO: 2019/2/21 设置子标题 二级Title
-        activity.getSupportActionBar().setSubtitle(subtitle);
+        // TODO: 2019/11/29 更新复数、单数
+        activity.getSupportActionBar().setSubtitle(quantityString);
     }
 
     private void updateUI() {
@@ -138,8 +148,8 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private ImageView mSolvedImageView;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+        CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layout) {
+            super(inflater.inflate(layout, parent, false));
             itemView.setOnClickListener(this);
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_title);
@@ -147,7 +157,7 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
         }
 
-        public void bind(Crime crime) {
+        void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDate().toString());
@@ -159,30 +169,71 @@ public class CrimeListFragment extends Fragment {
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
+
     }
 
+    private class EmptyCrimeHolder extends CrimeHolder {
+        private final Button mButtonAdd;
+
+        EmptyCrimeHolder(LayoutInflater inflater, ViewGroup parent, int layoutId) {
+            super(inflater, parent, layoutId);
+            mButtonAdd = itemView.findViewById(R.id.button_add_crime);
+            mButtonAdd.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == mButtonAdd.getId()) {
+                CrimeListFragment.this.addCrime();
+                return;
+            }
+            super.onClick(view);
+        }
+    }
+
+
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+        private static final int VIEW_TYPE_NORMAL = 0;
+        private static final int VIEW_TYPE_EMPTY = 1;
 
         private List<Crime> mCrimes;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
+        @NonNull
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new CrimeHolder(layoutInflater, parent);
+            if (VIEW_TYPE_EMPTY == viewType) {
+                return new EmptyCrimeHolder(layoutInflater, parent, R.layout.list_item_crime_empty);
+            }
+            return new CrimeHolder(layoutInflater, parent, R.layout.list_item_crime);
         }
 
         @Override
-        public void onBindViewHolder(CrimeHolder holder, int position) {
+        public int getItemViewType(int position) {
+            if (mCrimes == null || mCrimes.isEmpty()) {
+                return VIEW_TYPE_EMPTY;
+            }
+            return VIEW_TYPE_NORMAL;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
+            if (mCrimes == null || mCrimes.isEmpty()) {
+                return;
+            }
             Crime crime = mCrimes.get(position);
             holder.bind(crime);
         }
 
         @Override
         public int getItemCount() {
+            if (mCrimes == null || mCrimes.isEmpty()) {
+                return 1;
+            }
             return mCrimes.size();
         }
     }
