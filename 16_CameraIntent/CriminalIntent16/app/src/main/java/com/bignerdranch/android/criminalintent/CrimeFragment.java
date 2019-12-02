@@ -164,18 +164,24 @@ public class CrimeFragment extends Fragment {
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = FileProvider.getUriForFile(getActivity(),
+                // FIXME: 2019/12/2 这里出现了错误!
+                //FIXME Android -N 之后出现的问题
+                Uri uri = FileProvider.getUriForFile(getContext().getApplicationContext(),
                         "com.bignerdranch.android.criminalintent.fileprovider",
+//                        BuildConfig.APPLICATION_ID + ".provider",
                         mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
-                List<ResolveInfo> cameraActivities = getActivity()
+                List<ResolveInfo> cameraActivities = getContext()
                         .getPackageManager().queryIntentActivities(captureImage,
                                 PackageManager.MATCH_DEFAULT_ONLY);
 
                 for (ResolveInfo activity : cameraActivities) {
                     getActivity().grantUriPermission(activity.activityInfo.packageName,
                             uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    // TODO: 2019/12/2
+                    getActivity().grantUriPermission(activity.activityInfo.packageName,
+                            uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
 
                 startActivityForResult(captureImage, REQUEST_PHOTO);
@@ -233,8 +239,9 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
-            Uri uri = FileProvider.getUriForFile(getActivity(),
+            Uri uri = FileProvider.getUriForFile(getContext().getApplicationContext(),
                     "com.bignerdranch.android.criminalintent.fileprovider",
+//                    BuildConfig.APPLICATION_ID + ".provider",
                     mPhotoFile);
 
             getActivity().revokeUriPermission(uri,
