@@ -31,6 +31,9 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/files" />
+            <!-- TODO android:grantUriPermissions="true" : 授予临时访问本FileProvider的权限-->
+            <!-- TODO android:exported="false" 向外暴露接口-->
+            <!-- TODO android:authorities 唯一id,通常是“包名+.fileprovider”-->
 
         </provider>
     </application>

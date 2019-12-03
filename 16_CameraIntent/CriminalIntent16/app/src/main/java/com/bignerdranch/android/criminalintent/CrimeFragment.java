@@ -156,7 +156,8 @@ public class CrimeFragment extends Fragment {
         }
 
         mPhotoButton = (ImageButton) v.findViewById(R.id.crime_camera);
-        //TODO 用于判断是否有 摄像机的设备：通过intent.resolveActivity(pm):来判断是否有能够处理它的Activity
+        //TODO 用于判断是否有 摄像机的设备：通过intent.resolveActivity(pm):来判断是否有能够处理它的组件名称
+        // TODO: 2019/12/3 MediaStore.ACTION_IMAGE_CAPTURE : 返回的结果带照片？的连接Uri??
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTakePhoto = mPhotoFile != null &&
                 captureImage.resolveActivity(packageManager) != null;
@@ -172,16 +173,15 @@ public class CrimeFragment extends Fragment {
                         mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
+                // TODO: 2019/12/3 pm 查询匹配的组件信息
                 List<ResolveInfo> cameraActivities = getContext()
                         .getPackageManager().queryIntentActivities(captureImage,
                                 PackageManager.MATCH_DEFAULT_ONLY);
 
+                // TODO: 2019/12/3 为每个匹配的组件 授予临时读取权限，让它们能在Uri指向的位置写文件
                 for (ResolveInfo activity : cameraActivities) {
                     getActivity().grantUriPermission(activity.activityInfo.packageName,
                             uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    // TODO: 2019/12/2
-                    getActivity().grantUriPermission(activity.activityInfo.packageName,
-                            uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
 
                 startActivityForResult(captureImage, REQUEST_PHOTO);
@@ -239,10 +239,12 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
+            // TODO: 2019/12/3  MediaStore.ACTION_IMAGE_CAPTURE
             Uri uri = FileProvider.getUriForFile(getContext().getApplicationContext(),
                     CRIMINAL_INTENT_FILE_PROVIDER,
                     mPhotoFile);
 
+            // TODO: 2019/12/3 revoke:撤销权限
             getActivity().revokeUriPermission(uri,
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
