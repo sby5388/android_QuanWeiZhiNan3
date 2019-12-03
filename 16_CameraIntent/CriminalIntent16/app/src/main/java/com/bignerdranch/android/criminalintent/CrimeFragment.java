@@ -38,6 +38,7 @@ import java.util.UUID;
 import static android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class CrimeFragment extends Fragment {
+    private static final String CRIMINAL_INTENT_FILE_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider";
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
@@ -167,8 +168,7 @@ public class CrimeFragment extends Fragment {
                 // FIXME: 2019/12/2 这里出现了错误!
                 //FIXME Android -N 之后出现的问题
                 Uri uri = FileProvider.getUriForFile(getContext().getApplicationContext(),
-                        "com.bignerdranch.android.criminalintent.fileprovider",
-//                        BuildConfig.APPLICATION_ID + ".provider",
+                        CRIMINAL_INTENT_FILE_PROVIDER,
                         mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
@@ -240,8 +240,7 @@ public class CrimeFragment extends Fragment {
             }
         } else if (requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getContext().getApplicationContext(),
-                    "com.bignerdranch.android.criminalintent.fileprovider",
-//                    BuildConfig.APPLICATION_ID + ".provider",
+                    CRIMINAL_INTENT_FILE_PROVIDER,
                     mPhotoFile);
 
             getActivity().revokeUriPermission(uri,
