@@ -11,15 +11,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -37,7 +40,8 @@ import java.util.UUID;
 
 import static android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class CrimeFragment extends Fragment {
+public class CrimeFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener {
+    private static final String TAG = "CrimeFragment";
     private static final String CRIMINAL_INTENT_FILE_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider";
 
     private static final String ARG_CRIME_ID = "crime_id";
@@ -46,6 +50,7 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO = 2;
+    private static final String SHOW_PHOTO = "showPhoto";
 
     private Crime mCrime;
     private File mPhotoFile;
@@ -57,6 +62,7 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
 
+    private ViewTreeObserver mViewTreeObserver;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -189,9 +195,22 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPhotoView();
+            }
+        });
+        mViewTreeObserver = mPhotoView.getViewTreeObserver();
+        mViewTreeObserver.addOnGlobalLayoutListener(this);
         updatePhotoView();
 
         return v;
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        updatePhotoView();
     }
 
     @Override
@@ -279,10 +298,12 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setEnabled(false);
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(
                     mPhotoFile.getPath(), getActivity());
             mPhotoView.setImageBitmap(bitmap);
+            mPhotoView.setEnabled(true);
         }
     }
 
@@ -297,5 +318,14 @@ public class CrimeFragment extends Fragment {
         FileInputStream inputStream = context.openFileInput(fileName);
         //TODO  openFileOutput 写入文件，如果不存在就创建它
         FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+    }
+
+    private void showPhotoView() {
+        Log.d(TAG, "showPhotoView: start");
+        // TODO: 2019/12/3 显示一个DialogFragment 来显示放大的图片
+        final FragmentManager manager = getChildFragmentManager();
+        DialogFragment fragment = PhotoDialogFragment.newInstance(mPhotoFile.getPath());
+        fragment.show(manager, SHOW_PHOTO);
+        Log.d(TAG, "showPhotoView: finish");
     }
 }
