@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
-import com.bignerdranch.android.criminalintent.database.CrimeDbSchema;
 import com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.io.File;
@@ -15,14 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.*;
-import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.*;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.DATE;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.SOLVED;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.TITLE;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
+    // TODO: 2019/11/7 使用内部类单例的形式，上下文使用Application
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
@@ -57,6 +59,7 @@ public class CrimeLab {
         }
         return crimes;
     }
+
 
     public Crime getCrime(UUID id) {
         CrimeCursorWrapper cursor = queryCrimes(

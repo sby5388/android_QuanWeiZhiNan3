@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static android.widget.CompoundButton.OnCheckedChangeListener;
@@ -127,8 +128,8 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, 
-                    boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
                 mCrime.setSolved(isChecked);
                 updateCrime();
             }
@@ -170,7 +171,7 @@ public class CrimeFragment extends Fragment {
         boolean canTakePhoto = mPhotoFile != null &&
                 captureImage.resolveActivity(packageManager) != null;
         mPhotoButton.setEnabled(canTakePhoto);
-         
+
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,7 +270,13 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(mCrime.getDate().toString());
+        String bestDateTimePattern = DateFormat.getBestDateTimePattern(Locale.CHINA, "yyyyMMddhhmmss");
+        //String bestDateTimePattern = DateFormat.getBestDateTimePattern(Locale.US, "yyyyMMdd");
+        // TODO: 2019/12/4 中国默认是 yyyy/mm/dd
+        // TODO: 2019/12/4 美国默认是 mm/dd/yyyy
+        final String localDate = DateFormat.format(bestDateTimePattern, mCrime.getDate()).toString();
+
+        mDateButton.setText(localDate);
     }
 
     private String getCrimeReport() {
@@ -280,7 +287,9 @@ public class CrimeFragment extends Fragment {
             solvedString = getString(R.string.crime_report_unsolved);
         }
         String dateFormat = "EEE, MMM dd";
-        String dateString = DateFormat.format(dateFormat, mCrime.getDate()).toString();
+        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(Locale.CHINA, dateFormat);
+        String dateString = DateFormat.format(bestDateTimePattern, mCrime.getDate()).toString();
+
         String suspect = mCrime.getSuspect();
         if (suspect == null) {
             suspect = getString(R.string.crime_report_no_suspect);

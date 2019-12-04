@@ -1,12 +1,14 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,10 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CrimeListFragment extends Fragment {
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+    private static final String TAG = CrimeListFragment.class.getSimpleName();
 
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
@@ -37,7 +41,11 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mCallbacks = (Callbacks) context;
+        if (context instanceof Callbacks) {
+            mCallbacks = (Callbacks) context;
+        } else {
+            throw new RuntimeException("context must implements CrimeListFragment#Callbacks");
+        }
     }
 
     @Override
@@ -56,9 +64,9 @@ public class CrimeListFragment extends Fragment {
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         if (savedInstanceState != null) {
+            // TODO: 2019/11/7 是否显示子标题
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
         }
-
         updateUI();
 
         return view;
@@ -79,6 +87,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        // TODO: 2019/11/7 移除对Activity 的引用，防止内存泄露
         mCallbacks = null;
     }
 
@@ -114,9 +123,12 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
+    /**
+     * 更新子标题：二级标题
+     */
     private void updateSubtitle() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        int crimeCount = crimeLab.getCrimes().size();
+        final CrimeLab crimeLab = CrimeLab.get(getActivity());
+        final int crimeCount = crimeLab.getCrimes().size();
         String subtitle = getString(R.string.subtitle_format, crimeCount);
 
         if (!mSubtitleVisible) {
@@ -124,7 +136,12 @@ public class CrimeListFragment extends Fragment {
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setSubtitle(subtitle);
+        final ActionBar actionBar = activity.getSupportActionBar();
+        if (actionBar == null) {
+            Log.e(TAG, "updateSubtitle: ", new Exception("actionBar == null "));
+            return;
+        }
+        actionBar.setSubtitle(subtitle);
     }
 
     public void updateUI() {
@@ -144,14 +161,15 @@ public class CrimeListFragment extends Fragment {
 
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-
+        final String bestDateTimePattern = DateFormat.getBestDateTimePattern(Locale.CHINA, "yyyyMMddhhmmss");
+        //final String bestDateTimePattern = DateFormat.getBestDateTimePattern(Locale.US, "yyyyMMddhhmmss");
         private Crime mCrime;
 
-        private TextView mTitleTextView;
-        private TextView mDateTextView;
-        private ImageView mSolvedImageView;
+        private final TextView mTitleTextView;
+        private final TextView mDateTextView;
+        private final ImageView mSolvedImageView;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
+        CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
 
@@ -160,10 +178,11 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
         }
 
-        public void bind(Crime crime) {
+        void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            final String localDate = DateFormat.format(bestDateTimePattern, mCrime.getDate()).toString();
+            mDateTextView.setText(localDate);
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
@@ -177,13 +196,13 @@ public class CrimeListFragment extends Fragment {
 
         private List<Crime> mCrimes;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
         @Override
         public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             return new CrimeHolder(layoutInflater, parent);
         }
 
@@ -198,7 +217,7 @@ public class CrimeListFragment extends Fragment {
             return mCrimes.size();
         }
 
-        public void setCrimes(List<Crime> crimes) {
+        void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
     }

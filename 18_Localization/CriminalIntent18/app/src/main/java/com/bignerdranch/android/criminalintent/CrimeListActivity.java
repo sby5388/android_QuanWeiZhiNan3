@@ -13,12 +13,14 @@ public class CrimeListActivity extends SingleFragmentActivity
 
     @Override
     protected int getLayoutResId() {
+        // TODO: 2019/11/7 屏幕宽度大于600dp时 自动使用宽屏的布局
         return R.layout.activity_masterdetail;
     }
 
     @Override
     public void onCrimeSelected(Crime crime) {
-        if (findViewById(R.id.detail_fragment_container) == null) {
+        // TODO: 2019/11/7 根据这里来判断布局的情况：单面板或者双面板
+        if (isOnePaneView()) {
             Intent intent = CrimePagerActivity.newIntent(this, crime.getId());
             startActivity(intent);
         } else {
@@ -27,6 +29,15 @@ public class CrimeListActivity extends SingleFragmentActivity
                     .replace(R.id.detail_fragment_container, newDetail)
                     .commit();
         }
+    }
+
+    /**
+     * 是不是单面板(只显示一个Fragment)
+     *
+     * @return true is ViView
+     */
+    private boolean isOnePaneView() {
+        return findViewById(R.id.detail_fragment_container) == null;
     }
 
     public void onCrimeUpdated(Crime crime) {
