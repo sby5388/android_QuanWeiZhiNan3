@@ -7,7 +7,7 @@ import android.util.Log;
  * @author admin  on 2019/3/11.
  */
 public class SoundViewModel extends BaseObservable {
-    public static final String TAG = "SoundViewModel";
+    private static final String TAG = "SoundViewModel";
     private Sound mSound;
     private BeatBox mBeatBox;
 

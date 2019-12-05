@@ -25,7 +25,7 @@ public class BeatBox {
         String[] soundNames;
         try {
             soundNames = mAssets.list(SOUNDS_FOLDER);
-            if (soundNames!=null) {
+            if (soundNames != null) {
                 Log.i(TAG, "Found " + soundNames.length + " sounds");
             }
         } catch (IOException ioe) {

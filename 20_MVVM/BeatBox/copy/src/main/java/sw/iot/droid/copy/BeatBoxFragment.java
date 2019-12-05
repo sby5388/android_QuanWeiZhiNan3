@@ -26,22 +26,18 @@ public class BeatBoxFragment extends Fragment {
         return new BeatBoxFragment();
     }
 
-    public BeatBoxFragment() {
-
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: 2019/1/26 保存一个当前的Fragment的状态，包括所拥有的数据，
         // TODO 屏幕发生旋转，Activity 被销毁时 这样就能在某些情况下恢复到原来的状态。
-        //fragment的retainInstance属性值默认为false，这表明其不会被保留。
-        // 因此，设备旋转时 fragment会随托管activity一起被销毁并重建。
-        // 调用setRetainInstance(true)方法可保留fragment。
-        // 已保留的fragment不会随activity一起被销毁。
-        // 相反，它会一直保留，并在需要时原封 不动地转给新的activity。
-        // 对于已保留的fragment实例，其全部实例变量（如mBeatBox）的值也会保持不变，因此可放心继续使用。
-        // 运行BeatBox应用。播放69_ohm-loko声音文件，然后旋转设备，确认音频播放不受影响。
+        //  fragment的retainInstance属性值默认为false，这表明其不会被保留。
+        //  因此，设备旋转时 fragment会随托管activity一起被销毁并重建。
+        //  调用setRetainInstance(true)方法可保留fragment。
+        //  已保留的fragment不会随activity一起被销毁。
+        //  相反，它会一直保留，并在需要时原封 不动地转给新的activity。
+        //  对于已保留的fragment实例，其全部实例变量（如mBeatBox）的值也会保持不变，因此可放心继续使用。
+        //  运行BeatBox应用。播放69_ohm-loko声音文件，然后旋转设备，确认音频播放不受影响。
         //TODO 使用Fragment 来避免 因为屏幕翻转而带来的数据丢失的问题:就是保存Fragment的状态
         setRetainInstance(true);
         mBeatBox = new BeatBox(getContext());
