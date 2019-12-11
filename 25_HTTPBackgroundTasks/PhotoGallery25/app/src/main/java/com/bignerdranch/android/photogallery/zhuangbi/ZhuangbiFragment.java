@@ -27,6 +27,11 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
 
     private ZhuangbiTask mTask;
 
+
+    public static Fragment newInstance() {
+        return new ZhuangbiFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +39,6 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
         setRetainInstance(true);
         mAdapter = new ZhuangbiAdapter(getContext());
     }
-
-    public static Fragment newInstance() {
-        return new ZhuangbiFragment();
-    }
-
 
     @NonNull
     @Override
@@ -66,8 +66,6 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
             String queryWord = "金馆长";
             mTask.execute(queryWord);
         }
-
-
     }
 
 }

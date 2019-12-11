@@ -17,6 +17,13 @@ android {
         }
     }
 }
+//todo 20191211 每一行的使用方法
+def FlickrApiKey = "d80e0fbab7551485a80a02a521f228eb"
+def FLICKR_API_KEY = '"' + FlickrApiKey + '"' ?: '"Define Flickr API key"'
+android.buildTypes.each {
+    type ->
+        type.buildConfigField 'String', 'FLICKR_API_KEY', FLICKR_API_KEY
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

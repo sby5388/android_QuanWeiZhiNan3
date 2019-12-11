@@ -24,7 +24,7 @@ public class FlickrFetchr {
 
     //TODO
 //    private static final String API_KEY = "REPLACE_ME_WITH_A_REAL_KEY";
-    private static final String API_KEY = "d80e0fbab7551485a80a02a521f228eb";
+    private static final String API_KEY = BuildConfig.FLICKR_API_KEY;
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);

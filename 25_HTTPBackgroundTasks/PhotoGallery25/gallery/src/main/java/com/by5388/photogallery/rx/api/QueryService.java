@@ -24,8 +24,7 @@ public interface QueryService {
     Observable<Result> getPhotos(@Query("method") String method,
                                  @Query("api_key") String apiLey,
                                  @Query("format") String format,
-                                 @Query("nojsoncallback") String callBack
-            ,
+                                 @Query("nojsoncallback") String callBack,
                                  @Query("extras") String extras
     );
 }
