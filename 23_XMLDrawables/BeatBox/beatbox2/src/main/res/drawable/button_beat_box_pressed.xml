@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--        todo layer-list 合并多个 drawable.xml,以item 隔开-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!--        todo 定义一个红色的圆-->
+        <shape android:shape="oval">
+            <solid android:color="@color/red" />
+        </shape>
+    </item>
+
+    <item>
+        <!--        todo 定义一个暗红色的圈-->
+        <shape android:shape="oval">
+            <stroke
+                android:width="4dp"
+                android:color="@color/dark_red" />
+        </shape>
+
+    </item>
+
+    <!--    todo 如何实现一个点击后在中间形成水波纹的效果-->
+</layer-list>

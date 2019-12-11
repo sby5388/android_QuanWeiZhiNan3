@@ -1,1 +1,2 @@
-include ':app'
+rootProject.name = "BeatBox23"
+include ':app', ':beatbox2'

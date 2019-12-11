@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><!--TODO shape:定义一个形状-->
+<!--TODO shape的类型有几种
+1.oval 圆形
+2.rectangle 矩形
+3.line 线形
+4.ring 梯形
+-->
+
+<!-- TODO 内部参数效果
+1.corners 边角的圆弧半径，使用radius
+2.solid 实心填充,使用color
+3.stroke 描边,使用width
+4.padding 边距，同View的padding
+5.gradient :颜色渐变，（起始角度，开始颜色，结束颜色）
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <!-- TODO   solid：定义颜色 -->
+    <solid android:color="@color/dark_blue" />
+
+</shape>
