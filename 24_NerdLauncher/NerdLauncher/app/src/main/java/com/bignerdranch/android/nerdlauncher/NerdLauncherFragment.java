@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -35,6 +36,7 @@ public class NerdLauncherFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_nerd_launcher, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.app_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // TODO: 2019/12/11 添加分隔符 ：垂直方向
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         setupAdapter();
         return v;
@@ -76,8 +78,11 @@ public class NerdLauncherFragment extends Fragment {
         public void bindActivity(ResolveInfo resolveInfo) {
             mResolveInfo = resolveInfo;
             PackageManager pm = getActivity().getPackageManager();
-            String appName = mResolveInfo.loadLabel(pm).toString();
-            mImageView.setImageDrawable(mResolveInfo.activityInfo.loadIcon(pm));
+            // TODO: 2019/12/11 加载应用名称
+            final String appName = mResolveInfo.loadLabel(pm).toString();
+            // TODO: 2019/12/11  加载应用icon
+            final Drawable drawable = mResolveInfo.activityInfo.loadIcon(pm);
+            mImageView.setImageDrawable(drawable);
 
             mNameTextView.setText(appName);
         }
@@ -85,7 +90,7 @@ public class NerdLauncherFragment extends Fragment {
         @Override
         public void onClick(View view) {
             ActivityInfo activityInfo = mResolveInfo.activityInfo;
-
+            //如果不设置Action 呢 -->无影响
             Intent i = new Intent(Intent.ACTION_MAIN)
                     .setClassName(activityInfo.applicationInfo.packageName,
                             activityInfo.name)
@@ -123,6 +128,5 @@ public class NerdLauncherFragment extends Fragment {
             return mActivities.size();
         }
     }
-
 
 }
