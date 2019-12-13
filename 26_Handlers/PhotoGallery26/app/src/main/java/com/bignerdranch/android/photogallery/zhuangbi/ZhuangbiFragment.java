@@ -58,9 +58,12 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
         mHandlerThread.getLooper();
         Log.d(TAG, "onCreate: mHandlerThread.start()");
         // TODO: 2019/3/13 使用ZbDownloadHandlerThread 进行加载
-        mAdapter = new ZhuangbiAdapter(getContext(), mHandlerThread);
-        // TODO: 2019/3/13 使用 Picasso进行加载
-//        mAdapter = new PicassoAdapter(getContext(), mHandlerThread);
+        if (true) {
+            mAdapter = new ZhuangbiAdapter(getContext(), mHandlerThread);
+        } else {
+            // TODO: 2019/3/13 使用 Picasso进行加载
+            mAdapter = new PicassoAdapter(getContext(), mHandlerThread);
+        }
 
     }
 
