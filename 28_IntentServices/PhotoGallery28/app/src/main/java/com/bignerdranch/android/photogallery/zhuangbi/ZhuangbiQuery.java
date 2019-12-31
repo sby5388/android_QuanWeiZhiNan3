@@ -60,14 +60,18 @@ public class ZhuangbiQuery {
     }
 
     public String getUrlString(String urlSpec) throws IOException {
-        //编码过的
-        System.out.println("getUrlString 编码后 = " + urlSpec);
-        //解码
-        String decode = Uri.decode(urlSpec);
-        System.out.println("getUrlString 解码后 = " + decode);
-        //编码
-        String encode = Uri.encode(decode);
-        System.out.println("getUrlString 编码后 = " + encode);
+
+        boolean debug = false;
+        if (debug) {
+            //编码过的
+            System.out.println("getUrlString 编码后 = " + urlSpec);
+            //解码
+            String decode = Uri.decode(urlSpec);
+            System.out.println("getUrlString 解码后 = " + decode);
+            //编码
+            String encode = Uri.encode(decode);
+            System.out.println("getUrlString 编码后 = " + encode);
+        }
         return new String(getUrlBytes(urlSpec));
     }
 
@@ -77,7 +81,7 @@ public class ZhuangbiQuery {
     }
 
     public List<QueryResult> fetchItems(String queryWord) {
-        System.out.println("fetchItems = ");
+        Log.e(TAG, "fetchItems: queryWord = " + queryWord, new Exception());
         List<QueryResult> items = new ArrayList<>();
 
         try {

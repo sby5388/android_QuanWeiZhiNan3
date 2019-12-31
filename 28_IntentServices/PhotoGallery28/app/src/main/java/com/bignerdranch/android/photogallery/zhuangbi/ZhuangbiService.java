@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bignerdranch.android.photogallery.R;
 import com.bignerdranch.android.photogallery.zhuangbi.bean.QueryResult;
@@ -40,6 +41,7 @@ public class ZhuangbiService extends IntentService {
 
     public static boolean isServiceAlarmOn(Context context) {
         Intent i = newIntent(context);
+        //PendingIntent.FLAG_NO_CREATE：用于检测PendingIntent对象是否存在，不会创建新的实例
         PendingIntent pi = PendingIntent
                 .getService(context, 0, i, PendingIntent.FLAG_NO_CREATE);
         return pi != null;
@@ -67,6 +69,7 @@ public class ZhuangbiService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         //响应Service:处理Intent
         if (!isNetworkAvailabeAndConnected(this)) {
+            Toast.makeText(this, "网络异常", Toast.LENGTH_SHORT).show();
             return;
         }
         // TODO: 2019/3/14 应当在QueryPreferences之中增加Zb相关的“K-V”对

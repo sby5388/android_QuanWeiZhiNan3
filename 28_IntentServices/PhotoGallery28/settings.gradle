@@ -1,1 +1,2 @@
-include ':app'
+rootProject.name = "PhotoGallery28"
+include ':app', ':alarmmanagerdemo'

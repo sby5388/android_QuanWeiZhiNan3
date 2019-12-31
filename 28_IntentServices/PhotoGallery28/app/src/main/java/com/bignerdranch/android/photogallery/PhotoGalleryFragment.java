@@ -1,5 +1,6 @@
 package com.bignerdranch.android.photogallery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -128,14 +129,15 @@ public class PhotoGalleryFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final Context context = getContext();
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
-                QueryPreferences.setStoredQuery(getActivity(), null);
+                QueryPreferences.setStoredQuery(context, null);
                 updateItems();
                 return true;
             case R.id.menu_item_toggle_polling:
-                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
-                PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(context);
+                PollService.setServiceAlarm(context, shouldStartAlarm);
                 getActivity().invalidateOptionsMenu();
                 return true;
             default:
@@ -144,7 +146,7 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void updateItems() {
-        String query = QueryPreferences.getStoredQuery(getActivity());
+        String query = QueryPreferences.getStoredQuery(getContext());
         new FetchItemsTask(query).execute();
     }
 

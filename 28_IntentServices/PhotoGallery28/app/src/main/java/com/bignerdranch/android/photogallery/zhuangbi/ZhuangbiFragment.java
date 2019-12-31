@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -27,6 +28,7 @@ import com.bignerdranch.android.photogallery.zhuangbi.bean.QueryResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author admin  on 2019/3/13.
@@ -34,36 +36,11 @@ import java.util.List;
 public class ZhuangbiFragment extends Fragment implements QueryCallBack {
 
     private static final String TAG = "ZhuangbiFragment";
-
     private ZhuangbiAdapter mAdapter;
-
-
     private ZbDownloadHandlerThread<ZhuangbiHolder> mHandlerThread;
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_clear:
-                ZbQueryPreferences.setStoredQuery(getContext(), null);
-                updateItems();
-                return true;
-            case R.id.menu_item_toggle_polling:
-                boolean shouldStartAlarm = !ZhuangbiService.isServiceAlarmOn(getContext());
-                ZhuangbiService.setServiceAlarm(getActivity(), shouldStartAlarm);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
-
-    private void updateItems() {
-        String query = ZbQueryPreferences.getStoredQuery(getActivity());
-        if (!TextUtils.isEmpty(query)) {
-            new ZhuangbiTask(this).execute(query);
-        }
+    public static Fragment newInstance() {
+        return new ZhuangbiFragment();
     }
 
     @Override
@@ -74,12 +51,20 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
         setHasOptionsMenu(true);
         initData();
 
-        Context context = getContext();
+        Context context = Objects.requireNonNull(getContext());
         if (context != null) {
             Intent intent = ZhuangbiService.newIntent(context);
             context.startService(intent);
         }
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // TODO: 2019/3/13 使用HandlerThread 实现下载
+        updateItems();
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -125,7 +110,7 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
                 new ZbDownloadHandlerThread.ZbThumbnailDownloadListener<ZhuangbiHolder>() {
                     @Override
                     public void onThumbnailDownloaded(ZhuangbiHolder target, Bitmap thumbnail) {
-                        Drawable drawable = new BitmapDrawable(thumbnail);
+                        Drawable drawable = new BitmapDrawable(getResources(), thumbnail);
                         target.bindZhuangbiItem(drawable);
                     }
                 });
@@ -139,10 +124,6 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
 //        mAdapter = new PicassoAdapter(getContext(), mHandlerThread);
         // TODO: 2019/3/13 使用Glide
 //        mAdapter = new GlideAdapter(getContext(), mHandlerThread);
-    }
-
-    public static Fragment newInstance() {
-        return new ZhuangbiFragment();
     }
 
 
@@ -163,11 +144,35 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
         mAdapter.setZhuangbiItemList(new ArrayList<ZhuangbiItem>(results));
     }
 
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // TODO: 2019/3/13 使用HandlerThread 实现下载
-        updateItems();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_clear:
+                ZbQueryPreferences.setStoredQuery(getContext(), null);
+                updateItems();
+                return true;
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm = !ZhuangbiService.isServiceAlarmOn(getContext());
+                final FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    return false;
+                }
+                ZhuangbiService.setServiceAlarm(activity, shouldStartAlarm);
+                //主动更新菜单栏的显示
+                activity.invalidateOptionsMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void updateItems() {
+        String query = ZbQueryPreferences.getStoredQuery(getActivity());
+        if (!TextUtils.isEmpty(query)) {
+            new ZhuangbiTask(this).execute(query);
+        }
     }
 
     @Override

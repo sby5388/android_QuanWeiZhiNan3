@@ -29,11 +29,11 @@ public class PollService extends IntentService {
     }
 
     public static void setServiceAlarm(Context context, boolean isOn) {
-        Intent intent = newIntent(context);
-        PendingIntent pi = PendingIntent.getService(
+        final Intent intent = newIntent(context);
+        final PendingIntent pi = PendingIntent.getService(
                 context, 0, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager)
+        final AlarmManager alarmManager = (AlarmManager)
                 context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             return;
@@ -69,7 +69,7 @@ public class PollService extends IntentService {
         String query = QueryPreferences.getStoredQuery(this);
         String lastResultId = QueryPreferences.getLastResultId(this);
         List<GalleryItem> items;
-
+        Log.d(TAG, "onHandleIntent: thread = " + Thread.currentThread().getName());
         if (query == null) {
             items = new FlickrFetchr().fetchRecentPhotos();
         } else {

@@ -12,8 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".PhotoGalleryActivity" />
-        <activity android:name=".zhuangbi.ZhuangbiActivity">
+        <activity android:name=".PhotoGalleryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -21,7 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".zhuangbi.ZhuangbiService"/>
+        <activity android:name=".zhuangbi.ZhuangbiActivity">
+
+        </activity>
+
+        <service android:name=".zhuangbi.ZhuangbiService" />
 
 
         <service android:name=".PollService" />
