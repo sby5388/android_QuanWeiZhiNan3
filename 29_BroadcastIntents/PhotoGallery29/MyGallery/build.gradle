@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.by5388.gallery"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+    }
+    buildToolsVersion = '28.0.3'
+}
+//todo 20191211 每一行的使用方法
+def FlickrApiKey = "d80e0fbab7551485a80a02a521f228eb"
+def FLICKR_API_KEY = '"' + FlickrApiKey + '"' ?: '"Define Flickr API key"'
+android.buildTypes.each {
+    type ->
+        type.buildConfigField 'String', 'FLICKR_API_KEY', FLICKR_API_KEY
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'com.google.code.gson:gson:2.2.4'
+
+    // https://mvnrepository.com/artifact/com.squareup.picasso/picasso
+    implementation group: 'com.squareup.picasso', name: 'picasso', version: '2.71828'
+    //event bus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
+
+}

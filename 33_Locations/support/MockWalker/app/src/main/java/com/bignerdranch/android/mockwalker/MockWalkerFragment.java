@@ -2,22 +2,21 @@ package com.bignerdranch.android.mockwalker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
+import java.util.Objects;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 public class MockWalkerFragment extends Fragment {
-    @InjectView(R.id.start_button)
-    CompoundButton mStartButton;
+    private ToggleButton mStartButton;
     // TODO: 2019/6/20 类似于rxJava2中的水管：Disposable/Com,用于关闭时阻止事件继续传递
     private final CompositeSubscription mServiceSubscriptions = new CompositeSubscription();
     private Intent mServiceIntent;
@@ -26,7 +25,13 @@ public class MockWalkerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mockwalker, container, false);
 
-        ButterKnife.inject(this, v);
+        mStartButton = v.findViewById(R.id.start_button);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartButtonClick();
+            }
+        });
 
         mServiceIntent = MockWalkerService.newIntent(getContext());
 
@@ -45,14 +50,13 @@ public class MockWalkerFragment extends Fragment {
         return v;
     }
 
-    @OnClick(R.id.start_button)
-    public void onStartButtonClick() {
+    private void onStartButtonClick() {
         MockWalker mockWalker = MockWalker.getInstance();
-
+        final FragmentActivity activity = Objects.requireNonNull(getActivity());
         if (mockWalker.isStarted()) {
-            getActivity().stopService(mServiceIntent);
+            activity.stopService(mServiceIntent);
         } else {
-            getActivity().startService(mServiceIntent);
+            activity.startService(mServiceIntent);
         }
     }
 

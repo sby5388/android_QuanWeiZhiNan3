@@ -6,7 +6,7 @@ import android.os.StrictMode;
 /**
  * @author Administrator  on 2019/7/19.
  */
-class App extends Application {
+public class App extends Application {
 
     @Override
     public void onCreate() {

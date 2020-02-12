@@ -16,7 +16,7 @@ public class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
     private List<Sound> mSounds;
     private BeatBox mBeatBox;
 
-    public SoundAdapter(BeatBox beatBox) {
+    SoundAdapter(BeatBox beatBox) {
         mBeatBox = beatBox;
         mSounds = mBeatBox.getSounds();
     }

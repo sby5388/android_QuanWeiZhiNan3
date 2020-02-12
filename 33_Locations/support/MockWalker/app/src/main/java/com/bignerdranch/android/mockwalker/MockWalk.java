@@ -8,7 +8,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -100,6 +100,9 @@ class MockWalk extends HandlerThread {
         return super.quit();
     }
 
+    /**
+     * 安排下一次更新
+     */
     private void scheduleNextUpdate() {
         if (isAlive() && !isInterrupted() && isEnabled()) {
             mHandler.postDelayed(this.mLocationUpdate, PERIOD_LENGTH_MS);

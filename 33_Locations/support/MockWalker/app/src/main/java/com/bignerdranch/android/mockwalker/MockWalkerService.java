@@ -6,7 +6,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 
 public class MockWalkerService extends Service {
     private static final int NOTIFICATION_ID = 1;
@@ -14,6 +15,7 @@ public class MockWalkerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //一种严格的模式，只能显式地启动、暂停；相应及时，如适用于后台的音乐播放
         return Service.START_STICKY;
     }
 
@@ -25,7 +27,7 @@ public class MockWalkerService extends Service {
         PendingIntent shutdownPI = PendingIntent.getBroadcast(
                 this, PENDING_SHUTDOWN_ID, shutdownIntent, 0
         );
-        Notification notification = new NotificationCompat.Builder(this)
+        Notification notification = new NotificationCompat.Builder(this, getApplicationContext().getPackageName())
                 .setSmallIcon(android.R.drawable.ic_dialog_map)
                 .setContentTitle(getString(R.string.notification_title))
                 .setContentText(getString(R.string.notification_text))
@@ -33,6 +35,7 @@ public class MockWalkerService extends Service {
                 .setContentIntent(shutdownPI)
                 .build();
 
+        // TODO: 2020/1/7 这里出现了权限禁止-->闪退
         startForeground(NOTIFICATION_ID, notification);
         MockWalker.getInstance().setStarted(true);
     }

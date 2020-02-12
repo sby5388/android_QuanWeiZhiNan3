@@ -1,12 +1,15 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
+    private static final String TAG = "CrimeListFragment";
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
@@ -37,6 +41,8 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        // TODO: 2019/12/3 类型装换失败时，会自动抛出运行时异常吗？是的，所以并不需要多余的异常抛出
+        //  ClassCastException extends java.lang.RuntimeException
         mCallbacks = (Callbacks) context;
     }
 
@@ -53,7 +59,11 @@ public class CrimeListFragment extends Fragment {
 
         mCrimeRecyclerView = (RecyclerView) view
                 .findViewById(R.id.crime_recycler_view);
+
+
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCrimeRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        swipeToDelete(mCrimeRecyclerView);
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
@@ -79,6 +89,8 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        // TODO: 2019/12/3 在onAttach创建，就要在对应的detach 销毁
+//        Log.d(TAG, "onDetach: ", new Exception());
         mCallbacks = null;
     }
 
@@ -201,5 +213,30 @@ public class CrimeListFragment extends Fragment {
         public void setCrimes(List<Crime> crimes) {
             mCrimes = crimes;
         }
+    }
+
+    private void swipeToDelete(@NonNull final RecyclerView recyclerView) {
+        if (true) {
+            // TODO: 2019/
+            final ItemTouchHelperCallback callback = new ItemTouchHelperCallback();
+            final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+            return;
+        }
+        recyclerView.addItemDecoration(new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                Log.d(TAG, "onMove: recyclerView = " + recyclerView);
+                Log.d(TAG, "onMove: viewHolder = " + viewHolder);
+                Log.d(TAG, "onMove: target = " + target);
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.d(TAG, "onSwiped: viewHolder = " + viewHolder);
+                Log.d(TAG, "onSwiped: direction = " + direction);
+            }
+        }));
     }
 }

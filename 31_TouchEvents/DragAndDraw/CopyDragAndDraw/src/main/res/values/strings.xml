@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CopyDragAndDraw</string>
+    <string name="blue">Blue</string>
+    <string name="red">Red</string>
+</resources>

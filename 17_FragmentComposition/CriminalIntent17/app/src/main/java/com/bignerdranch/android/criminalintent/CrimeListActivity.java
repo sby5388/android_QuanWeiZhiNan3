@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 /**
+ * 即使 有了双面板，依然拓展自单面板，有一个界面是不变的
+ *
  * @author Administrator
  */
 public class CrimeListActivity extends SingleFragmentActivity

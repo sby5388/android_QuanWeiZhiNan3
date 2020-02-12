@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="blue">#331296db</color>
+    <color name="red">#33d81e06</color>
+    <!--todo 8位色彩与6位色彩的差别：前2位是代表透明度,后6位与6位色彩值完全相同；-->
+    <!--TODO 00：完全透明；ff:完全不透明；默认是ff-->
+    <color name="defaultColor">@color/yellow</color>
+    <color name="yellow">#33f4ea2a</color>
+    <color name="yellow0">#fff4ea2a</color>
+    <color name="yellow1">#f4ea2a</color>
+    <color name="yellow2">#22ff0000</color>
+</resources>

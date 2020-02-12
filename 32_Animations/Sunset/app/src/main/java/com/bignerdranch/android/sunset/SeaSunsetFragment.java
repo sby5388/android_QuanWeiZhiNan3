@@ -62,6 +62,9 @@ public class SeaSunsetFragment extends Fragment {
         Resources resources = getResources();
         mBlueSkyColor = resources.getColor(R.color.blue_sky);
         mSunsetSkyColor = resources.getColor(R.color.sunset_sky);
+        // TODO: 2019/7/22
+//        mSunsetSeaColor = resources.getColor(R.color.sunset_sea);
+        mSunsetSeaColor = mSunsetSkyColor;
         mNightSkyColor = resources.getColor(R.color.night_sky);
         mBlueSeaColor = resources.getColor(R.color.sea);
     }
@@ -109,7 +112,6 @@ public class SeaSunsetFragment extends Fragment {
         final float sunYStart = mSkyView.getHeight();
         final float sunYEnd = mSunViewTop;
 
-
         final ObjectAnimator sunYAnimator = ObjectAnimator
                 .ofFloat(mSunView, "y", sunYStart, sunYEnd)
                 .setDuration(3000);
@@ -136,20 +138,19 @@ public class SeaSunsetFragment extends Fragment {
 
 
         final ObjectAnimator seaColorAnimator = ObjectAnimator
-                .ofInt(mSeaView, "backgroundColor", mSunsetSkyColor, mBlueSeaColor)
+                .ofInt(mSeaView, "backgroundColor", mSunsetSeaColor, mBlueSeaColor)
                 .setDuration(3000);
         seaColorAnimator.setEvaluator(new ArgbEvaluator());
 
         final ObjectAnimator nightSeaAnimator = ObjectAnimator
-                .ofInt(mSeaView, "backgroundColor", mNightSkyColor, mSunsetSkyColor)
+                .ofInt(mSeaView, "backgroundColor", mNightSkyColor, mSunsetSeaColor)
                 .setDuration(1500);
         nightSeaAnimator.setEvaluator(new ArgbEvaluator());
 
 
         AnimatorSet nightSet = new AnimatorSet();
         nightSet.play(nightSkyAnimator)
-                .with(nightSeaAnimator)
-        ;
+                .with(nightSeaAnimator);
 
         AnimatorSet daySet = new AnimatorSet();
         daySet.play(skyColorAnimator)
@@ -161,7 +162,6 @@ public class SeaSunsetFragment extends Fragment {
         animatorSet
                 .play(nightSet)
                 .before(daySet);
-
         animatorSet.start();
 
 
@@ -204,28 +204,26 @@ public class SeaSunsetFragment extends Fragment {
         seaSunYAnimator.setInterpolator(new AccelerateInterpolator());
 
         final ObjectAnimator seaColorAnimator = ObjectAnimator
-                .ofInt(mSeaView, "backgroundColor", mBlueSeaColor, mSunsetSkyColor)
+                .ofInt(mSeaView, "backgroundColor", mBlueSeaColor, mSunsetSeaColor)
                 .setDuration(3000);
         seaColorAnimator.setEvaluator(new ArgbEvaluator());
 
         // TODO: 2019/7/19 对2种颜色稍微一些差别 ，不能完全一致
         final ObjectAnimator seaNightAnimator = ObjectAnimator
-                .ofInt(mSeaView, "backgroundColor", mSunsetSkyColor, mNightSkyColor)
+                .ofInt(mSeaView, "backgroundColor", mSunsetSeaColor, mNightSkyColor)
                 .setDuration(1500);
         seaNightAnimator.setEvaluator(new ArgbEvaluator());
         final AnimatorSet nightSet = new AnimatorSet();
 //
         nightSet.play(seaNightAnimator)
-                .with(nightSkyColorAnimator)
-        ;
+                .with(nightSkyColorAnimator);
         AnimatorSet animatorSet = new AnimatorSet();
 
         animatorSet.play(sunYAnimator)
                 .with(seaSunYAnimator)
                 .with(skyColorAnimator)
                 .with(seaColorAnimator)
-                .before(nightSet)
-        ;
+                .before(nightSet);
         animatorSet.start();
 
     }

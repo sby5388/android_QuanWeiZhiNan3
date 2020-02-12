@@ -1,12 +1,12 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CrimeListFragment extends Fragment {
 
@@ -146,6 +147,7 @@ public class CrimeListFragment extends Fragment {
             implements View.OnClickListener {
 
         private Crime mCrime;
+        final String local = DateFormat.getBestDateTimePattern(Locale.getDefault(), "yyyyMMdd hhmmss");
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -163,8 +165,10 @@ public class CrimeListFragment extends Fragment {
         public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            final String time = DateFormat.format(local, mCrime.getDate()).toString();
+            mDateTextView.setText(time);
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+            itemView.setContentDescription(mCrime.getTitle() + time + getString(mCrime.isSolved() ? R.string.crime_report_solved : R.string.crime_report_unsolved));
         }
 
         @Override

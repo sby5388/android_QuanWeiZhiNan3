@@ -305,4 +305,8 @@ public class CrimeFragment extends Fragment {
                     getString(R.string.crime_photo_image_description));
         }
     }
+
+    private void temp(View view){
+//        view.announceForAccessibility();
+    }
 }

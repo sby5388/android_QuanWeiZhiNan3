@@ -38,6 +38,8 @@ public class BoxDrawingView extends View {
         //2个画笔
         // Paint the boxes a nice semitransparent red (ARGB)
         mBoxPaint = new Paint();
+        // TODO: 2019/6/17 设着透明度！！！ 
+        // FIXME: 2019/6/17 
         mBoxPaint.setColor(0x22ff0000);
 
         // Paint the background off-white

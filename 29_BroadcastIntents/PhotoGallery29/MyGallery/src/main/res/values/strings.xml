@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MyGallery</string>
+    <string name="to_zhuangbi">bigger</string>
+    <string name="search">搜索</string>
+    <string name="clear">清除搜索</string>
+
+    <string name="start_polling">开始推送</string>
+    <string name="stop_polling">停止推送</string>
+    <string name="new_pictures_title">新的图片</string>
+    <string name="new_pictures_text">发现了新的一张图片</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
