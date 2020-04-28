@@ -23,7 +23,7 @@ public class FlickrFetchr {
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
@@ -43,6 +43,7 @@ public class FlickrFetchr {
             connection.disconnect();
         }
     }
+
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
@@ -85,11 +86,11 @@ public class FlickrFetchr {
             GalleryItem item = new GalleryItem();
             item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
-            
+
             if (!photoJsonObject.has("url_s")) {
                 continue;
             }
-            
+
             item.setUrl(photoJsonObject.getString("url_s"));
             items.add(item);
         }

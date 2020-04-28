@@ -28,6 +28,7 @@ public class GalleryItem {
     public void setUrl(String url) {
         mUrl = url;
     }
+
     @Override
     public String toString() {
         return mCaption;

@@ -38,13 +38,13 @@ public class PhotoGalleryFragment extends Fragment {
         Handler responseHandler = new Handler();
         mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
         mThumbnailDownloader.setThumbnailDownloadListener(
-            new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>() {
-                @Override
-                public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap) {
-                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                    photoHolder.bindDrawable(drawable);
+                new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>() {
+                    @Override
+                    public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                        photoHolder.bindDrawable(drawable);
+                    }
                 }
-            }
         );
         mThumbnailDownloader.start();
         mThumbnailDownloader.getLooper();
@@ -125,7 +125,13 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class FetchItemsTask extends AsyncTask<Void,Void,List<GalleryItem>> {
+    // TODO: 2020/4/28 需要替换掉
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {
 
         @Override
         protected List<GalleryItem> doInBackground(Void... params) {

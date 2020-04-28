@@ -15,25 +15,22 @@ import java.util.concurrent.ConcurrentMap;
 public class ThumbnailDownloader<T> extends HandlerThread {
     private static final String TAG = "ThumbnailDownloader";
     private static final int MESSAGE_DOWNLOAD = 0;
-
+    // TODO: 2020/4/28 最大内存的1%，8GB-->80MB
+    private static final int CACHE_SIZE = (int) (Runtime.getRuntime().maxMemory() * 0.01);
     private boolean mHasQuit = false;
     private Handler mRequestHandler;
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();
-    private LruCache<String, Bitmap> mLruCache = new LruCache<>(1000);
+    private LruCache<String, Bitmap> mLruCache = new LruCache<>(CACHE_SIZE);
     private Handler mResponseHandler;
     private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
-
-    public interface ThumbnailDownloadListener<T> {
-        void onThumbnailDownloaded(T target, Bitmap bitmap);
-    }
-
-    public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {
-        mThumbnailDownloadListener = listener;
-    }
 
     public ThumbnailDownloader(Handler responseHandler) {
         super(TAG);
         mResponseHandler = responseHandler;
+    }
+
+    public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {
+        mThumbnailDownloadListener = listener;
     }
 
     @Override
@@ -87,7 +84,6 @@ public class ThumbnailDownloader<T> extends HandlerThread {
                                 mHasQuit) {
                             return;
                         }
-
                         mRequestMap.remove(target);
                         mThumbnailDownloadListener.onThumbnailDownloaded(target, cache);
                     }
@@ -116,5 +112,9 @@ public class ThumbnailDownloader<T> extends HandlerThread {
         } catch (IOException ioe) {
             Log.e(TAG, "Error downloading image", ioe);
         }
+    }
+
+    public interface ThumbnailDownloadListener<T> {
+        void onThumbnailDownloaded(T target, Bitmap bitmap);
     }
 }

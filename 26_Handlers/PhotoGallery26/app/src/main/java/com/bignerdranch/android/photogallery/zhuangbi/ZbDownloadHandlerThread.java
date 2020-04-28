@@ -23,18 +23,11 @@ public class ZbDownloadHandlerThread<T> extends HandlerThread {
     private boolean mHasQuit = false;
 
     private ZbThumbnailDownloadListener<T> mZbThumbnailDownloadListener;
-
-
-    public void setZbThumbnailDownloadListener(ZbThumbnailDownloadListener<T> listener) {
-        mZbThumbnailDownloadListener = listener;
-    }
-
     /**
      * TODO 请求Handler:
      * 用于后台获取资源，工作于非UI线程
      */
     private Handler mRequestHandler;
-
     /**
      * TODO 响应Handler:
      * 当工作线程把事情完成之后，要更新UI时，把数据传给这个handler；工作于UI线程
@@ -47,27 +40,15 @@ public class ZbDownloadHandlerThread<T> extends HandlerThread {
      * 下载结果就能很方便地发送给显示图片的UI元素。）
      */
     private ConcurrentMap<T, String> mRequestMap;
-
-
-    /**
-     * 下载监听：回调
-     */
-    public interface ZbThumbnailDownloadListener<T> {
-        /**
-         * 回调
-         *
-         * @param target    {@link T}
-         * @param thumbnail 缩略图
-         */
-        void onThumbnailDownloaded(T target, Bitmap thumbnail);
-    }
-
-
     public ZbDownloadHandlerThread(Handler responseHandler) {
         super(TAG);
         this.mResponseHandler = responseHandler;
 
         mRequestMap = new ConcurrentHashMap<>();
+    }
+
+    public void setZbThumbnailDownloadListener(ZbThumbnailDownloadListener<T> listener) {
+        mZbThumbnailDownloadListener = listener;
     }
 
     /**
@@ -118,7 +99,6 @@ public class ZbDownloadHandlerThread<T> extends HandlerThread {
 
     }
 
-
     /**
      * 查询缩略图
      * query 查询
@@ -147,5 +127,18 @@ public class ZbDownloadHandlerThread<T> extends HandlerThread {
     public boolean quit() {
         mHasQuit = true;
         return super.quit();
+    }
+
+    /**
+     * 下载监听：回调
+     */
+    public interface ZbThumbnailDownloadListener<T> {
+        /**
+         * 回调
+         *
+         * @param target    {@link T}
+         * @param thumbnail 缩略图
+         */
+        void onThumbnailDownloaded(T target, Bitmap thumbnail);
     }
 }

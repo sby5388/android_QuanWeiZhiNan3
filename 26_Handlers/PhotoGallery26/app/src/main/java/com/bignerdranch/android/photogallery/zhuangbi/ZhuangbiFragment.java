@@ -34,6 +34,9 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
 
     private ZbDownloadHandlerThread<ZhuangbiHolder> mHandlerThread;
 
+    public static Fragment newInstance() {
+        return new ZhuangbiFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,11 +69,6 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
         }
 
     }
-
-    public static Fragment newInstance() {
-        return new ZhuangbiFragment();
-    }
-
 
     @NonNull
     @Override
