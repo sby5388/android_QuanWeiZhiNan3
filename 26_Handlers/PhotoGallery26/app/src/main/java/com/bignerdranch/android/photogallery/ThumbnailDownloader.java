@@ -8,10 +8,16 @@ import android.os.Message;
 import android.util.Log;
 import android.util.LruCache;
 
+import com.bignerdranch.android.photogallery.v2.ThumbnailDownloader2;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * @param <T>
+ * //deprecated {@link ThumbnailDownloader2}
+ */
 public class ThumbnailDownloader<T> extends HandlerThread {
     private static final String TAG = "ThumbnailDownloader";
     private static final int MESSAGE_DOWNLOAD = 0;
@@ -80,7 +86,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {
             if (cache != null) {
                 mResponseHandler.post(new Runnable() {
                     public void run() {
-                        if (!mRequestMap.get(target).equals(url) ||
+                        if (!url.equals(mRequestMap.get(target)) ||
                                 mHasQuit) {
                             return;
                         }
