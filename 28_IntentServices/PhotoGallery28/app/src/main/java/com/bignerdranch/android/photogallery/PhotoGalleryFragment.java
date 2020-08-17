@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Administrator
@@ -138,7 +139,7 @@ public class PhotoGalleryFragment extends Fragment {
             case R.id.menu_item_toggle_polling:
                 boolean shouldStartAlarm = !PollService.isServiceAlarmOn(context);
                 PollService.setServiceAlarm(context, shouldStartAlarm);
-                getActivity().invalidateOptionsMenu();
+                Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

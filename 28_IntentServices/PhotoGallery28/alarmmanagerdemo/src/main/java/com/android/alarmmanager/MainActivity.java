@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 MyIntentService.start(MainActivity.this, isChecked);
+                startService(new Intent(MainActivity.this,MyIntentService.class));
             }
         });
 
