@@ -7,6 +7,7 @@ import android.graphics.Point;
 
 /**
  * 图片处理工具
+ *
  * @author Administrator
  */
 public class PictureUtils {
@@ -35,14 +36,13 @@ public class PictureUtils {
             float heightScale = srcHeight / destHeight;
             float widthScale = srcWidth / destWidth;
 
-            inSampleSize = Math.round(heightScale > widthScale ? heightScale :
-                    widthScale);
+            inSampleSize = Math.round(Math.max(heightScale, widthScale));
         }
 
-        options = new BitmapFactory.Options();
-        options.inSampleSize = inSampleSize;
+        BitmapFactory.Options options2 = new BitmapFactory.Options();
+        options2.inSampleSize = inSampleSize;
 
         // Read in and create final bitmap
-        return BitmapFactory.decodeFile(path, options);
+        return BitmapFactory.decodeFile(path, options2);
     }
 }

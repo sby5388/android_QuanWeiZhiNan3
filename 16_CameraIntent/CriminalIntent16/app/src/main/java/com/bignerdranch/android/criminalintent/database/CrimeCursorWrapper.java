@@ -9,7 +9,7 @@ import com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable
 import java.util.Date;
 import java.util.UUID;
 
-import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.*;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols;
 
 public class CrimeCursorWrapper extends CursorWrapper {
 

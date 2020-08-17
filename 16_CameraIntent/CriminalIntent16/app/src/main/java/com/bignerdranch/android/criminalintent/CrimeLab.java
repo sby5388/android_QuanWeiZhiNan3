@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.bignerdranch.android.criminalintent.database.CrimeBaseHelper;
 import com.bignerdranch.android.criminalintent.database.CrimeCursorWrapper;
-import com.bignerdranch.android.criminalintent.database.CrimeDbSchema;
 import com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 import java.io.File;
@@ -15,13 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.*;
-import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.*;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.DATE;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.SOLVED;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.TITLE;
+import static com.bignerdranch.android.criminalintent.database.CrimeDbSchema.CrimeTable.Cols.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
+    private CrimeLab(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext)
+                .getWritableDatabase();
+
+    }
 
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
@@ -31,11 +39,15 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
-    private CrimeLab(Context context) {
-        mContext = context.getApplicationContext();
-        mDatabase = new CrimeBaseHelper(mContext)
-                .getWritableDatabase();
+    private static ContentValues getContentValues(Crime crime) {
+        ContentValues values = new ContentValues();
+        values.put(UUID, crime.getId().toString());
+        values.put(TITLE, crime.getTitle());
+        values.put(DATE, crime.getDate().getTime());
+        values.put(SOLVED, crime.isSolved() ? 1 : 0);
+        values.put(CrimeTable.Cols.SUSPECT, crime.getSuspect());
 
+        return values;
     }
 
     public void addCrime(Crime c) {
@@ -101,16 +113,5 @@ public class CrimeLab {
                 null  // orderBy
         );
         return new CrimeCursorWrapper(cursor);
-    }
-
-    private static ContentValues getContentValues(Crime crime) {
-        ContentValues values = new ContentValues();
-        values.put(UUID, crime.getId().toString());
-        values.put(TITLE, crime.getTitle());
-        values.put(DATE, crime.getDate().getTime());
-        values.put(SOLVED, crime.isSolved() ? 1 : 0);
-        values.put(CrimeTable.Cols.SUSPECT, crime.getSuspect());
-
-        return values;
     }
 }
