@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import java.util.UUID;
 
-import static android.widget.CompoundButton.*;
+import static android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class CrimeFragment extends Fragment {
 
@@ -38,6 +38,7 @@ public class CrimeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        //只是一个引用而已
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
@@ -73,8 +74,8 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, 
-                    boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
                 mCrime.setSolved(isChecked);
             }
         });

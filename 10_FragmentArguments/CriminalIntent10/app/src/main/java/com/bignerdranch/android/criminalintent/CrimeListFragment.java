@@ -3,10 +3,10 @@ package com.bignerdranch.android.criminalintent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +20,19 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private int mIndex = -1;
-    private boolean mFirst = true;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
+        return inflater.inflate(R.layout.fragment_crime_list, container, false);
+    }
 
-        mCrimeRecyclerView = (RecyclerView) view
-                .findViewById(R.id.crime_recycler_view);
-        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
+        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         updateUI();
-
-        return view;
     }
 
     @Override
@@ -44,8 +42,8 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
+        final CrimeLab crimeLab = CrimeLab.get(getContext());
+        final List<Crime> crimes = crimeLab.getCrimes();
 
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
@@ -53,19 +51,11 @@ public class CrimeListFragment extends Fragment {
         } else {
             // TODO: 2019/11/28 不需要显式更换数据源，只需要调用更新即可
             // FIXME: 2019/11/28 只更新其中的一项
-            if (mFirst) {
-                mAdapter.notifyDataSetChanged();
-                Log.d(TAG, "updateUI: all - 0");
-                mFirst = false;
-            } else {
-                if (mIndex == -1) {
-                    Log.d(TAG, "updateUI: all - 1");
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    Log.d(TAG, "updateUI: mIndex = " + mIndex);
-                    mAdapter.notifyItemChanged(mIndex);
-                }
 
+            if (mIndex != -1) {
+                mAdapter.notifyItemChanged(mIndex);
+            } else {
+                mAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -80,7 +70,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private ImageView mSolvedImageView;
 
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
+        private CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
 
@@ -89,7 +79,7 @@ public class CrimeListFragment extends Fragment {
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
         }
 
-        public void bind(Crime crime, int index) {
+        private void bind(Crime crime, int index) {
             mCrime = crime;
             mIndex = index;
             mTitleTextView.setText(mCrime.getTitle());
@@ -116,7 +106,7 @@ public class CrimeListFragment extends Fragment {
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             return new CrimeHolder(layoutInflater, parent);
         }
 
