@@ -16,7 +16,7 @@ public class HToolsFragment extends ToolsFragment {
     }
 
     @Override
-    protected RecyclerView.Adapter getAdapter() {
+    protected RecyclerView.Adapter<ToolsViewHolder> getAdapter() {
         return new ToolsAdapter(this);
     }
 

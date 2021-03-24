@@ -1,4 +1,4 @@
-package com.android.alarmmanager;
+package com.android.alarmmanager2;
 
 import java.io.Serializable;
 

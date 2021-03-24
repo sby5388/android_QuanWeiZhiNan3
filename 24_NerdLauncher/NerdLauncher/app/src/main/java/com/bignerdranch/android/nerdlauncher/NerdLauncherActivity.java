@@ -6,6 +6,10 @@ public class NerdLauncherActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return NerdLauncherFragment.newInstance();
+        return NerdLauncherFragment2.newInstance();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

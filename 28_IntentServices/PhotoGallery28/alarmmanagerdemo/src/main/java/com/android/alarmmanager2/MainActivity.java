@@ -1,4 +1,4 @@
-package com.android.alarmmanager;
+package com.android.alarmmanager2;
 
 import android.Manifest;
 import android.app.DownloadManager;

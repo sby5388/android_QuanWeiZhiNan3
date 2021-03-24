@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -23,10 +24,8 @@ import androidx.core.app.ActivityCompat;
 public class StartActivity extends AppCompatActivity {
 
     public static final String TAG = StartActivity.class.getSimpleName();
-    private static final String[] permissions = {
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.FOREGROUND_SERVICE,
-    };
+
+
     private static final int REQUEST_CODE = 100;
     private static final int REQUEST_SETTING = 200;
     private Handler mHandler = new Handler();
@@ -47,7 +46,7 @@ public class StartActivity extends AppCompatActivity {
     private void toMain() {
         boolean hasPermission = true;
         final List<String> needPermissions = new ArrayList<>();
-        for (String s : permissions) {
+        for (String s : getPermissions()) {
             if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, s)) {
                 needPermissions.add(s);
                 hasPermission = false;
@@ -65,7 +64,7 @@ public class StartActivity extends AppCompatActivity {
                 }
             }
             if (!showPermissionDialog) {
-                ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, getPermissions(), REQUEST_CODE);
             } else {
                 Toast.makeText(this, "权限已被禁止,请打开设置授权", Toast.LENGTH_LONG).show();
                 mHandler.postDelayed(new Runnable() {
@@ -110,5 +109,21 @@ public class StartActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE) {
             toMain();
         }
+    }
+
+    /**
+     * 根据版本的不同添加相应的权限
+     *
+     * @return
+     */
+    private String[] getPermissions() {
+        final List<String> permissions = new ArrayList<>(2);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            permissions.add(Manifest.permission.FOREGROUND_SERVICE);
+        }
+        String[] result = new String[permissions.size()];
+        permissions.toArray(result);
+        return result;
     }
 }

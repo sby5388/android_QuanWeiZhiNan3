@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * drag 拖拽
+ * draw 画
+ *
  * @author Administrator
  */
 public class BoxDrawingView extends View {
@@ -72,6 +75,7 @@ public class BoxDrawingView extends View {
 
     /**
      * 相应屏幕点击事件
+     *
      * @param event
      * @return
      */

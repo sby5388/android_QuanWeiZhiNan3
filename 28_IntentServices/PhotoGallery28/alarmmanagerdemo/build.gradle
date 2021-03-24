@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.android.alarmmanager"
+        applicationId "com.android.alarmmanager2"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1

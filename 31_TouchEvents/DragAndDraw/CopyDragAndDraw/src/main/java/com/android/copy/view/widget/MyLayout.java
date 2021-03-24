@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -82,7 +82,8 @@ public class MyLayout extends View {
         final int height = getHeight();
         for (ElementData data : mElementDataList) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), data.drawableID);
-            canvas.drawBitmap(bitmap, random.nextInt(width), random.nextInt(height), bitmapPaint);
+//            canvas.drawBitmap(bitmap, random.nextInt(width), random.nextInt(height), bitmapPaint);
+            canvas.drawBitmap(bitmap, data.x, data.y, bitmapPaint);
         }
     }
 
@@ -96,17 +97,6 @@ public class MyLayout extends View {
             mPaint.setColor(pearl.mColor);
             canvas.drawRect(mRectF, mPaint);
         }
-    }
-
-
-    @Override
-    public boolean performContextClick() {
-        return super.performContextClick();
-    }
-
-    @Override
-    public boolean performContextClick(float x, float y) {
-        return super.performContextClick(x, y);
     }
 
     @Override
@@ -152,13 +142,14 @@ public class MyLayout extends View {
 
 
     // TODO: 2019/6/17 修改颜色
-    public void changeColor(@ColorInt int colorValue) {
+//    @SuppressLint("ResourceType")
+    public void changeColor(@ColorRes int colorValue) {
         // TODO: 2019/6/17
         mCurrentColor = ContextCompat.getColor(getContext(), colorValue);
     }
 
     public void addBrush(@DrawableRes int drawable) {
-        mElementDataList.add(new ElementData(drawable));
+        mElementDataList.add(new ElementData(drawable, getWidth(), getHeight()));
         postInvalidate();
     }
 

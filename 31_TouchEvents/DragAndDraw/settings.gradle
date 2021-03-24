@@ -1,1 +1,2 @@
-include ':app', ':CopyDragAndDraw'
+include ':app'
+include ':CopyDragAndDraw'

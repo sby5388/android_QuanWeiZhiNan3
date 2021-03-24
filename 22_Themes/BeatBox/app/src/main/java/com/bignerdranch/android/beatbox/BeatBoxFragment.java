@@ -28,7 +28,7 @@ public class BeatBoxFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        
+
         mBeatBox = new BeatBox(getActivity());
     }
 

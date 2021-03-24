@@ -1,4 +1,4 @@
-package com.android.alarmmanager;
+package com.android.alarmmanager2;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -59,3 +59,4 @@ public class MyIntentService extends IntentService {
         }
     }
 }
+// TODO: 2020/11/6 IntentService 出现了线程冲突，没有按顺序执行

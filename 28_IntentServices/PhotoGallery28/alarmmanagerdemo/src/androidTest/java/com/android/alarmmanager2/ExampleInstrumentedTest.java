@@ -1,4 +1,4 @@
-package com.android.alarmmanager;
+package com.android.alarmmanager2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

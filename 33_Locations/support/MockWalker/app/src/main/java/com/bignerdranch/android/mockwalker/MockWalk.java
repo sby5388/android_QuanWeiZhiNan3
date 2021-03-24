@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import androidx.core.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -16,6 +15,9 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 class MockWalk extends HandlerThread {
     private static final String TAG = "MockWalk";
@@ -70,20 +72,15 @@ class MockWalk extends HandlerThread {
 
     }
 
-    private boolean getPermission(){
-        boolean getPermission = true;
-        final Context context = App.getInstance();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            getPermission = false;
-        }
+    private boolean getPermission() {
+        final boolean getPermission = grantedPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                || grantedPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
         return getPermission;
+    }
+
+    private boolean grantedPermission(@NonNull String permission) {
+        final Context context = App.getInstance();
+        return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

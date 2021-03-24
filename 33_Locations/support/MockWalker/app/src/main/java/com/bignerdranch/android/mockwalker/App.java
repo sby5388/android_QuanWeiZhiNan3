@@ -1,7 +1,10 @@
 package com.bignerdranch.android.mockwalker;
 
 import android.app.Application;
-import android.os.StrictMode;
+import android.app.NotificationChannel;
+import android.os.Build;
+
+import androidx.core.app.NotificationCompat;
 
 /**
  * @author Administrator  on 2019/6/20.
@@ -17,6 +20,17 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-//        StrictMode.enableDefaults();
+        registerNotificationChannelId();
+    }
+
+    /**
+     * 注册通知渠道
+     */
+    private void registerNotificationChannelId() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
+//        NotificationCompat.getChannelId()
+
     }
 }

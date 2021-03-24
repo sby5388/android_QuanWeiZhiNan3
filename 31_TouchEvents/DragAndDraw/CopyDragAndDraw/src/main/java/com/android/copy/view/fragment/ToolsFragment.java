@@ -57,7 +57,7 @@ public abstract class ToolsFragment extends Fragment implements ToolsAdapter.OnC
     protected abstract RecyclerView.LayoutManager getLayoutManager();
 
 
-    protected abstract RecyclerView.Adapter getAdapter();
+    protected abstract RecyclerView.Adapter<ToolsViewHolder> getAdapter();
 
 
     public interface ToolsUICallBack {

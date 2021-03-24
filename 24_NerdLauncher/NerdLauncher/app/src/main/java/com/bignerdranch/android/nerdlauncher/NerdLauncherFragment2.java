@@ -6,9 +6,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,25 +23,29 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class NerdLauncherFragment extends Fragment {
+public class NerdLauncherFragment2 extends Fragment {
     public static final String TAG = "NerdLauncherFragment";
 
     private RecyclerView mRecyclerView;
 
-    public static NerdLauncherFragment newInstance() {
-        return new NerdLauncherFragment();
+    public static NerdLauncherFragment2 newInstance() {
+        return new NerdLauncherFragment2();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_nerd_launcher, container, false);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.app_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        return inflater.inflate(R.layout.fragment_nerd_launcher, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.app_recycler_view);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
         // TODO: 2019/12/11 添加分隔符 ：垂直方向
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        //mRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         setupAdapter();
-        return v;
     }
 
     private void setupAdapter() {
@@ -109,12 +115,12 @@ public class NerdLauncherFragment extends Fragment {
             mActivities = activities;
         }
 
+        @NonNull
         @Override
-        public ActivityHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ActivityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater
-//                    .inflate(android.R.layout.simple_list_item_1, parent, false);
-                    .inflate(R.layout.item_application, parent, false);
+                    .inflate(R.layout.item_application2, parent, false);
             return new ActivityHolder(view);
         }
 

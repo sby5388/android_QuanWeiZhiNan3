@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".PhotoGalleryActivity"></activity>
-        <activity android:name=".zhuangbi.ZhuangbiActivity">
+        <activity
+            android:name=".zhuangbi.ZhuangbiActivity"
+            android:label="@string/zhuangbi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -30,11 +32,26 @@
         <service android:name=".zhuangbi.ZhuangbiService" />
 
         <!--todo 让Activity自适应外界的变化：无需销毁重建activity，就能直接调整自己的视图以适应新的屏幕尺寸 -->
-        <activity
-            android:name=".PhotoPageActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
         <!--TODO android:configChanges属性表明，如果因键盘开或关、屏幕方向改变、屏幕大小改变（也-->
         <!--TODO 包括Android 3.2之后的屏幕方向变化）而发生设备配置更改，那么activity应自己处理配置更改。-->
+        <!-- 参考 https://developer.android.google.cn/guide/components/intents-common#Browser 添加默认隐式意图 -->
+        <activity
+            android:name=".PhotoPageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="i.loli.net"
+                    android:scheme="https" />
+            </intent-filter>
+
+
+        </activity>
+
         <service android:name=".PollService" />
 
         <!--TODO 接收开机广播-->

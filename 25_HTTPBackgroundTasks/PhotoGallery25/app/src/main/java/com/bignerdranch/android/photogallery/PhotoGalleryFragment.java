@@ -39,7 +39,6 @@ public class PhotoGalleryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         setHasOptionsMenu(true);
         new FetchItemsTask().execute();
     }
@@ -80,7 +79,7 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    private static class PhotoHolder extends RecyclerView.ViewHolder {
         private TextView mTitleTextView;
 
         public PhotoHolder(View itemView) {

@@ -72,7 +72,7 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TODO
-        setRetainInstance(true);
+//        setRetainInstance(true);
         setHasOptionsMenu(true);
         initData();
 
@@ -140,7 +140,12 @@ public class ZhuangbiFragment extends Fragment implements QueryCallBack {
             @Override
             public void pushUri(Uri uri) {
                 if (context != null) {
+                    Log.d(TAG, "pushUri: uri = " + uri);
                     Intent intent = PhotoPageActivity.newIntent(context, uri);
+                    if (true){
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(uri);
+                    }
                     context.startActivity(intent);
                 }
             }
